@@ -1,0 +1,43 @@
+<nav
+    class="bg-[var(--color-high-primary)] text-white h-16 flex items-center px-5 gap-6 shadow-md border-b-4 border-[var(--color-high-accent)] sticky top-0 z-50">
+    <div class="flex items-center gap-2">
+        <div class="bg-[var(--color-high-accent)] p-1.5 rounded-lg flex items-center justify-center">
+            <mat-icon class="!text-white !text-lg">hotel</mat-icon>
+        </div>
+        <span class="text-base font-bold tracking-tight uppercase">
+            GuestHouse
+            <span class="text-[var(--color-high-accent)]">
+                Pro
+            </span>
+        </span>
+    </div>
+    <div class="hidden xl:flex items-center gap-1 h-full">
+        @for (item of menuItems; track item.label) {
+        <button mat-button
+            class="!rounded-none h-full !px-4 hover:!bg-white/10 flex flex-col items-center justify-center gap-0.5 group"
+            [matTooltip]="item.label">
+            <mat-icon class="!text-lg opacity-70 group-hover:opacity-100 transition-opacity">
+                {{item.icon}}
+            </mat-icon>
+            <span class="text-[9px] uppercase font-bold tracking-wider opacity-60 group-hover:opacity-100">
+                {{item.label}}
+            </span>
+        </button>
+        }
+    </div>
+    <div class="flex items-center gap-4 ml-auto">
+        <div class="text-right hidden sm:block">
+            <p class="text-[9px] text-white/40 font-bold uppercase tracking-widest leading-none">
+                Logged In
+            </p>
+            <p class="text-xs font-bold leading-tight">
+                Reception Admin
+            </p>
+        </div>
+        <button mat-icon-button class="!bg-white/5 hover:!bg-white/10 !w-10 !h-10">
+            <mat-icon class="opacity-80">
+                account_circle
+            </mat-icon>
+        </button>
+    </div>
+</nav>

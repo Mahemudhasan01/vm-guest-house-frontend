@@ -1,0 +1,360 @@
+<div class="dialog-container">
+
+  <!-- HEADER -->
+
+  <div class="dialog-header">
+
+    <div>
+      <h2>Guest Registration</h2>
+      <p>Room Check-In Form</p>
+    </div>
+
+    <button
+      mat-icon-button
+      (click)="onCancel()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </div>
+
+  <!-- BODY -->
+
+  <form
+    [formGroup]="guestForm"
+    class="dialog-body"
+  >
+
+    <!-- LEFT SIDE -->
+
+    <div class="left-section">
+
+      <div class="section-title">
+        Guest Details
+      </div>
+
+      <div class="grid-2">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Room No</mat-label>
+          <input matInput formControlName="roomNo">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="fullName">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Mobile</mat-label>
+          <input matInput formControlName="mobile">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+
+          <mat-select formControlName="state">
+
+            @for (state of states; track state) {
+
+              <mat-option [value]="state">
+                {{state}}
+              </mat-option>
+
+            }
+
+          </mat-select>
+
+        </mat-form-field>
+
+      </div>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>Address</mat-label>
+
+        <textarea
+          matInput
+          rows="3"
+          formControlName="address"
+        ></textarea>
+
+      </mat-form-field>
+
+      <div class="grid-2">
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>ID Proof Type</mat-label>
+
+          <mat-select formControlName="idProofType">
+
+            @for (type of idProofTypes; track type) {
+
+              <mat-option [value]="type">
+                {{type}}
+              </mat-option>
+
+            }
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>ID Proof No</mat-label>
+          <input matInput formControlName="idProofNo">
+        </mat-form-field>
+
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>GST No</mat-label>
+        <input matInput formControlName="gstNo">
+      </mat-form-field>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+
+    <div class="right-section">
+
+      <div class="section-title person-header">
+
+        <span>Additional Persons</span>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="addPerson()"
+        >
+
+          <mat-icon>add</mat-icon>
+
+          Add Person
+
+        </button>
+
+      </div>
+
+      <div
+        formArrayName="persons"
+        class="person-list"
+      >
+
+        @for (
+          person of persons.controls;
+          track person;
+          let i = $index
+        ) {
+
+          <div
+            [formGroupName]="i"
+            class="person-card"
+          >
+
+            <div class="person-top">
+
+              <span>
+                Person {{ i + 1 }}
+              </span>
+
+              @if (persons.length > 1) {
+
+                <button
+                  mat-icon-button
+                  color="warn"
+                  type="button"
+                  (click)="removePerson(i)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+
+              }
+
+            </div>
+
+            <div class="grid-3">
+
+              <mat-form-field appearance="outline">
+
+                <mat-label>Name</mat-label>
+
+                <input
+                  matInput
+                  formControlName="name"
+                >
+
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+
+                <mat-label>Age</mat-label>
+
+                <input
+                  matInput
+                  formControlName="age"
+                >
+
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+
+                <mat-label>Gender</mat-label>
+
+                <mat-select formControlName="gender">
+
+                  <mat-option value="Male">
+                    Male
+                  </mat-option>
+
+                  <mat-option value="Female">
+                    Female
+                  </mat-option>
+
+                </mat-select>
+
+              </mat-form-field>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+      <!-- IMAGE UPLOADS -->
+
+      <div class="upload-section">
+
+        <div class="upload-box" (dblclick)="openPreview(guestPhoto)">
+
+          <input
+            type="file"
+            hidden
+            #guestInput
+            (change)="onFileSelect($event, 'guest')"
+          >
+
+          <button
+            mat-button
+            type="button"
+            (click)="guestInput.click()"
+          >
+            Upload Guest Photo
+          </button>
+
+          @if (guestPhoto) {
+
+            <img
+              [src]="guestPhoto"
+              class="preview-thumb"
+            >
+          }
+        </div>
+
+        <div
+          class="upload-box"
+          (dblclick)="openPreview(idProofPhoto)"
+        >
+
+          <input
+            type="file"
+            hidden
+            #proofInput
+            (change)="onFileSelect($event, 'proof')"
+          >
+
+          <button
+            mat-button
+            type="button"
+            (click)="proofInput.click()"
+          >
+            Upload ID Proof
+          </button>
+
+          @if (idProofPhoto) {
+
+            <img
+              [src]="idProofPhoto"
+              class="preview-thumb"
+            >
+
+          }
+
+        </div>
+
+      </div>
+
+      <!-- REMARKS -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>Remarks</mat-label>
+
+        <textarea
+          matInput
+          rows="3"
+          formControlName="remarks"
+        ></textarea>
+
+      </mat-form-field>
+
+    </div>
+
+  </form>
+
+  <!-- FOOTER -->
+
+  <div class="dialog-footer">
+
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="onSave()"
+    >
+      Save Guest
+    </button>
+
+  </div>
+
+</div>
+
+<!-- IMAGE PREVIEW -->
+
+@if (previewImage) {
+
+  <div
+    class="image-preview-overlay"
+    (click)="closePreview()"
+  >
+
+    <img
+      [src]="previewImage"
+      class="preview-large"
+    >
+
+  </div>
+
+}
