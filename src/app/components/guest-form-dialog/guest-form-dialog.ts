@@ -24,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { CheckInCheckOutService } from '../../services/check-in-check-out-service';
 
 @Component({
   selector: 'app-guest-form-dialog',
@@ -100,6 +101,8 @@ export class GuestFormDialog {
     ])
   });
 
+  constructor(private checkInCheckOutService: CheckInCheckOutService) { }
+
   createPerson() {
 
     return this.fb.group({
@@ -162,10 +165,19 @@ export class GuestFormDialog {
   }
 
   onSave() {
-
-    console.log(this.guestForm.value);
-
-    this.dialogRef.close(this.guestForm.value);
+    this.checkInCheckOutService.saveCheckingDetails(this.guestForm.value).subscribe({
+      next: (response) => {
+        if(response && !response.isError){
+          console.log('Checking details saved successfully:', response);
+          this.dialogRef.close(this.guestForm.value);
+        } else {
+          console.error('Error saving checking details:', response.errorMessage);
+        }
+      },
+      error: (error) => {
+        console.error('Error saving checking details:', error);
+      }
+    });
   }
 
   onCancel() {
