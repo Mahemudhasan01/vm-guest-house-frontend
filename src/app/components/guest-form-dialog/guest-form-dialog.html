@@ -1,29 +1,20 @@
 <div class="dialog-container">
-
   <!-- HEADER -->
-
   <div class="dialog-header">
-
     <div>
       <h2>Guest Registration</h2>
       <p>Room Check-In Form</p>
     </div>
-
     <button
       mat-icon-button
-      (click)="onCancel()"
-    >
+      (click)="onCancel()">
       <mat-icon>close</mat-icon>
     </button>
-
   </div>
-
   <!-- BODY -->
-
   <form
     [formGroup]="guestForm"
-    class="dialog-body"
-  >
+    class="dialog-body">
 
     <!-- LEFT SIDE -->
 
