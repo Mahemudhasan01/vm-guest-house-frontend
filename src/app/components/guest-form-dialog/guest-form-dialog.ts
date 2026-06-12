@@ -73,29 +73,17 @@ export class GuestFormDialog {
   ];
 
   guestForm = this.fb.group({
-
     roomNo: ['101'],
-
     fullName: ['', Validators.required],
-
     mobile: [''],
-
     email: [''],
-
     city: [''],
-
     state: ['Gujarat'],
-
     address: [''],
-
     gstNo: [''],
-
     idProofType: ['Aadhaar'],
-
     idProofNo: [''],
-
     remarks: [''],
-
     persons: this.fb.array([
       this.createPerson()
     ])
@@ -104,38 +92,29 @@ export class GuestFormDialog {
   constructor(private checkInCheckOutService: CheckInCheckOutService) { }
 
   createPerson() {
-
     return this.fb.group({
-
-      name: [''],
-
+      fullName: [''],
       age: [''],
-
       gender: ['Male']
     });
   }
 
   get persons(): FormArray {
-
     return this.guestForm.get('persons') as FormArray;
   }
 
   addPerson() {
-
     this.persons.push(this.createPerson());
   }
 
   removePerson(index: number) {
-
     if (this.persons.length > 1) {
       this.persons.removeAt(index);
     }
   }
 
   onFileSelect(event: any, type: 'guest' | 'proof') {
-
     const file = event.target.files[0];
-
     if (!file) return;
 
     const reader = new FileReader();
@@ -153,14 +132,11 @@ export class GuestFormDialog {
   }
 
   openPreview(image: string | null) {
-
-    if (!image) return;
-
+    if (!image) return; 
     this.previewImage = image;
   }
 
   closePreview() {
-
     this.previewImage = null;
   }
 
@@ -181,7 +157,6 @@ export class GuestFormDialog {
   }
 
   onCancel() {
-
     this.dialogRef.close();
   }
 }
