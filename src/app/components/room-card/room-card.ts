@@ -1,6 +1,5 @@
 import { Component, input, OnInit, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Room, RoomStatus } from '../../models/room.model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RoomService } from '../../services/room-service';
@@ -22,11 +21,11 @@ export class RoomCard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAllRooms();
+    // this.getAllRooms();
   }
 
-  room = input.required<Room>();
-  roomDoubleClick = output<Room>();
+  room = input.required<any>();
+  roomDoubleClick = output<any>();
 
   onDblClick() {
     this.roomDoubleClick.emit(this.room());
@@ -34,21 +33,21 @@ export class RoomCard implements OnInit {
 
   getTooltipContent(): string {
     const r = this.room();
-    if (r.status === RoomStatus.OCCUPIED && r.guest
+    if (r.status === 'OCCUPIED' && r.guest
     ) {
       return `Guest: ${r.guest.fullName} | City: ${r.guest.city}`;
     }
     return `Room ${r.roomNumber} - Vacant`;
   }
 
-  getAllRooms() {
-    this.roomService.getAllRooms({}).subscribe({
-      next: (response) => {
-        console.log('All rooms:', response);
-      },
-      error: (error) => {
-        console.error('Error fetching all rooms:', error);
-      }
-    });
-  }
+  // getAllRooms() {
+  //   this.roomService.getAllRooms({}).subscribe({
+  //     next: (response) => {
+  //       console.log('All rooms:', response);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching all rooms:', error);
+  //     }
+  //   });
+  // }
 }

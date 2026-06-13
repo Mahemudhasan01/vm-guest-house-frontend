@@ -28,7 +28,13 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Room No</mat-label>
-          <input matInput formControlName="roomNo">
+          <mat-select (selectionChange)="onRoomSelected($event)">
+            @for (room of roomList; track room) {
+              <mat-option [value]="room.roomNumber">
+                {{ room.roomNumber }}
+              </mat-option>
+            }
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -124,17 +130,9 @@
 
         <span>Additional Persons</span>
 
-        <button
-          mat-raised-button
-          color="primary"
-          type="button"
-          (click)="addPerson()"
-        >
-
+        <button mat-raised-button color="primary" type="button" (click)="addPerson()" >
           <mat-icon>add</mat-icon>
-
           Add Person
-
         </button>
 
       </div>

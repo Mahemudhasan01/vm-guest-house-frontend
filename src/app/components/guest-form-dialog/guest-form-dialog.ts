@@ -1,6 +1,7 @@
 import {
   Component,
-  inject
+  inject,
+  OnInit
 } from '@angular/core';
 
 import {
@@ -25,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CheckInCheckOutService } from '../../services/check-in-check-out-service';
-
+import { RoomService } from '../../services/room-service';
 @Component({
   selector: 'app-guest-form-dialog',
 
@@ -46,7 +47,7 @@ import { CheckInCheckOutService } from '../../services/check-in-check-out-servic
 
   styleUrl: './guest-form-dialog.css'
 })
-export class GuestFormDialog {
+export class GuestFormDialog implements OnInit {
 
   private fb = inject(FormBuilder);
 
@@ -57,6 +58,7 @@ export class GuestFormDialog {
   idProofPhoto: string | null = null;
 
   previewImage: string | null = null;
+  roomList: any[] = [];
 
   states = [
     'Gujarat',
@@ -88,8 +90,32 @@ export class GuestFormDialog {
       this.createPerson()
     ])
   });
+  private roomService = inject(RoomService);
+  constructor(
+    private checkInCheckOutService: CheckInCheckOutService,
+    // private roomService: RoomService,
+  ) { }
 
-  constructor(private checkInCheckOutService: CheckInCheckOutService) { }
+  ngOnInit(): void {
+    console.log('RoomService:', this.roomService);
+    this.getRoomsList();
+  }
+
+  getRoomsList(){
+   const payload = {
+      page: 0,
+      size: 100
+    }; // Add any necessary parameters here
+
+    this.roomService.getAllRooms(payload).subscribe({
+      next: (response: any) => {
+        this.roomList = response.data.data ?? [];
+      },
+      error: (error: any) => {
+        console.error('Error fetching rooms:', error);
+      }
+    });
+  }
 
   createPerson() {
     return this.fb.group({
@@ -154,6 +180,9 @@ export class GuestFormDialog {
         console.error('Error saving checking details:', error);
       }
     });
+  }
+
+  onRoomSelected(event: any) {
   }
 
   onCancel() {

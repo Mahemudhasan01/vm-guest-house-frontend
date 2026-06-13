@@ -23,3 +23,16 @@ body {
 .custom-dialog-container .mat-mdc-dialog-surface {
     @apply !rounded-xl !p-0;
 }
+
+/* To solved Transperent Dropdown */
+.mat-mdc-select-panel {
+  background: #ffffff !important;
+}
+
+.mat-mdc-option {
+  background: #ffffff !important;
+}
+
+.cdk-overlay-pane {
+  z-index: 10000 !important;
+}
