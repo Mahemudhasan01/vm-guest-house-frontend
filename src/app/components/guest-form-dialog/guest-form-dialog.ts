@@ -1,31 +1,15 @@
-import {
-  Component,
-  inject,
-  OnInit
-} from '@angular/core';
-
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-  FormArray
-} from '@angular/forms';
-
-import {
-  MatDialogModule,
-  MatDialogRef
-} from '@angular/material/dialog';
-
+import { Component, Inject, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CheckInCheckOutService } from '../../services/check-in-check-out-service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { RoomService } from '../../services/room-service';
 @Component({
   selector: 'app-guest-form-dialog',
@@ -40,7 +24,8 @@ import { RoomService } from '../../services/room-service';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressSpinnerModule
   ],
 
   templateUrl: './guest-form-dialog.html',
@@ -50,16 +35,13 @@ import { RoomService } from '../../services/room-service';
 export class GuestFormDialog implements OnInit {
 
   private fb = inject(FormBuilder);
-
-  private dialogRef = inject(MatDialogRef<GuestFormDialog>);
-
+  
   guestPhoto: string | null = null;
-
   idProofPhoto: string | null = null;
-
   previewImage: string | null = null;
   roomList: any[] = [];
-
+  selectedRoomId: any = '';
+  loadingGuest: boolean = false;
   states = [
     'Gujarat',
     'Maharashtra',
@@ -75,11 +57,11 @@ export class GuestFormDialog implements OnInit {
   ];
 
   guestForm = this.fb.group({
-    roomNo: ['101'],
+    roomId: ['', Validators.required],
     fullName: ['', Validators.required],
-    mobile: [''],
-    email: [''],
-    city: [''],
+    mobile: ['', Validators.pattern('^[0-9]{10}$')],
+    email: ['', Validators.email],
+    city: ['', Validators.required],
     state: ['Gujarat'],
     address: [''],
     gstNo: [''],
@@ -90,22 +72,62 @@ export class GuestFormDialog implements OnInit {
       this.createPerson()
     ])
   });
-  private roomService = inject(RoomService);
+  
   constructor(
     private checkInCheckOutService: CheckInCheckOutService,
-    // private roomService: RoomService,
+    private roomService: RoomService,
+    @Inject(MAT_DIALOG_DATA) public selectedRoomDtls: any,
+    private dialogRef: MatDialogRef<GuestFormDialog>
   ) { }
 
   ngOnInit(): void {
-    console.log('RoomService:', this.roomService);
+    this.selectedRoomId = this.selectedRoomDtls.roomId ?? '';
+    if (this.selectedRoomDtls.roomStatus === 'OCCUPIED') {
+      this.loadGuestDetails();
+    }
     this.getRoomsList();
+  }
+
+
+  loadGuestDetails() {
+    this.loadingGuest = true;
+
+    this.checkInCheckOutService.getCurrentGuestByRoomId(this.selectedRoomDtls.roomId).subscribe({
+      next: (response) => {
+        const personsArray: FormArray = this.guestForm.get('persons') as FormArray;
+
+        this.guestForm.patchValue({
+          fullName: response.data.fullName,
+          mobile: response.data.mobile,
+          city: response.data.city,
+          state: response.data.state,
+          address: response.data.address,
+          gstNo: response.data.gstNo,
+          idProofType: response.data.idProofType,
+          idProofNo: response.data.idProofNo,
+          remarks: response.data.remarks
+        });
+        response.data.persons.forEach((person: any, index: number) => {
+          personsArray.push(this.fb.group({
+            fullName: [person.fullName],
+            age: [person.age]
+          }));
+        });
+
+        this.loadingGuest = false;
+      },
+      error: () => {
+        this.loadingGuest = false;
+      }
+    });
   }
 
   getRoomsList(){
    const payload = {
       page: 0,
-      size: 100
-    }; // Add any necessary parameters here
+      size: 100,
+      sortBy: 'roomNumber,asc'//Space not allowed in sortBy value
+    };
 
     this.roomService.getAllRooms(payload).subscribe({
       next: (response: any) => {
@@ -183,6 +205,9 @@ export class GuestFormDialog implements OnInit {
   }
 
   onRoomSelected(event: any) {
+    this.guestForm.patchValue({
+      roomId: event.value
+    });
   }
 
   onCancel() {

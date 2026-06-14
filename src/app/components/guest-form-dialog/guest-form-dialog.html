@@ -12,14 +12,17 @@
     </button>
   </div>
   <!-- BODY -->
+  @if (loadingGuest) {
+  <div class="flex items-center gap-2 text-slate-500">
+    <mat-icon>hourglass_empty</mat-icon>
+    Loading guest details...
+  </div>
+  }
   <form
     [formGroup]="guestForm"
     class="dialog-body">
-
     <!-- LEFT SIDE -->
-
     <div class="left-section">
-
       <div class="section-title">
         Guest Details
       </div>
@@ -28,9 +31,9 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Room No</mat-label>
-          <mat-select (selectionChange)="onRoomSelected($event)">
+          <mat-select (selectionChange)="onRoomSelected($event)" formControlName="roomId" [ngModel]="selectedRoomId">
             @for (room of roomList; track room) {
-              <mat-option [value]="room.roomNumber">
+              <mat-option [value]="room.id">
                 {{ room.roomNumber }}
               </mat-option>
             }
@@ -134,7 +137,6 @@
           <mat-icon>add</mat-icon>
           Add Person
         </button>
-
       </div>
 
       <div

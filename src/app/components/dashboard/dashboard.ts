@@ -54,7 +54,8 @@ export class Dashboard implements OnInit{
   loadRooms(): void {
     const payload = {
       page: 0,
-      size: 100
+      size: 100, 
+      filterAnd: 'isActive|eq|true',
     }; // Add any necessary parameters here
 
     this.roomService.getAllRooms(payload).subscribe({
@@ -145,16 +146,15 @@ export class Dashboard implements OnInit{
       disableClose: true,
       autoFocus: false,
       panelClass: 'custom-dialog-container',
-      data: { room }
+      data: {
+        roomId: room.id,
+        roomStatus: room.status
+      }
     }); 
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.roomService.updateRoomStatus(
-        //   room.roomNumber,
-        //   RoomStatus.OCCUPIED,
-        //   result
-        // );
+        this.loadRooms();
       }
     });
   }
