@@ -1,6 +1,6 @@
 import { Component, Inject, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -57,17 +57,36 @@ export class GuestFormDialog implements OnInit {
   ];
 
   guestForm = this.fb.group({
-    roomId: ['', Validators.required],
-    fullName: ['', Validators.required],
-    mobile: ['', Validators.pattern('^[0-9]{10}$')],
-    email: ['', Validators.email],
-    city: ['', Validators.required],
-    state: ['Gujarat'],
-    address: [''],
-    gstNo: [''],
-    idProofType: ['Aadhaar'],
-    idProofNo: [''],
+  propertyId: [1],
+
+  roomId: ['', Validators.required],
+
+    primaryGuest: this.fb.group({
+      fullName: ['', Validators.required],
+      mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      email: ['', Validators.email],
+      gender: [''],
+      dob: [null],
+      city: ['', Validators.required],
+      state: ['Gujarat'],
+      country: ['India'],
+      pinCode: [''],
+      address: [''],
+      gstNo: [''],
+      companyName: [''],
+      photoUrl: [''],
+      idProofNo: ['', Validators.required]
+    }),
+
+    adultCount: [1],
+    childCount: [0],
+    extraPersonCount: [0],
+
+    tariff: [0],
+    advanceAmount: [0],
+
     remarks: [''],
+
     persons: this.fb.array([
       this.createPerson()
     ])
@@ -92,34 +111,48 @@ export class GuestFormDialog implements OnInit {
   loadGuestDetails() {
     this.loadingGuest = true;
 
-    this.checkInCheckOutService.getCurrentGuestByRoomId(this.selectedRoomDtls.roomId).subscribe({
-      next: (response) => {
-        const personsArray: FormArray = this.guestForm.get('persons') as FormArray;
+    this.checkInCheckOutService
+      .getGuestDtlsByRoomId(this.selectedRoomDtls.roomId)
+      .subscribe({
+        next: (response) => {
+          const personsArray = this.guestForm.get('persons') as FormArray;
+          // Clear existing persons before adding new ones
+          personsArray.clear();
 
-        this.guestForm.patchValue({
-          fullName: response.data.fullName,
-          mobile: response.data.mobile,
-          city: response.data.city,
-          state: response.data.state,
-          address: response.data.address,
-          gstNo: response.data.gstNo,
-          idProofType: response.data.idProofType,
-          idProofNo: response.data.idProofNo,
-          remarks: response.data.remarks
-        });
-        response.data.persons.forEach((person: any, index: number) => {
-          personsArray.push(this.fb.group({
-            fullName: [person.fullName],
-            age: [person.age]
-          }));
-        });
+          this.guestForm.patchValue({
+            primaryGuest: {
+              fullName: response.data.primaryGuest.fullName,
+              mobile: response.data.primaryGuest.mobile,
+              email: response.data.primaryGuest.email,
+              gender: response.data.primaryGuest.gender,
+              city: response.data.primaryGuest.city,
+              state: response.data.primaryGuest.state,
+              country: response.data.primaryGuest.country,
+              pinCode: response.data.primaryGuest.pinCode,
+              address: response.data.primaryGuest.address,
+              gstNo: response.data.primaryGuest.gstNo,
+              companyName: response.data.primaryGuest.companyName,
+              photoUrl: response.data.primaryGuest.photoUrl,
+              idProofNo: response.data.primaryGuest.idProofNo
+            },
+            adultCount: response.data.adultCount,
+            childCount: response.data.childCount,
+            extraPersonCount: response.data.extraPersonCount,
+            tariff: response.data.tariff,
+            advanceAmount: response.data.advanceAmount,
+            remarks: response.data.remarks
+          });
 
-        this.loadingGuest = false;
-      },
-      error: () => {
-        this.loadingGuest = false;
-      }
-    });
+          response.data.persons.forEach((person: any) => {
+            personsArray.push(this.createPerson(person));
+          });
+
+          this.loadingGuest = false;
+        },
+        error: () => {
+          this.loadingGuest = false;
+        }
+      });
   }
 
   getRoomsList(){
@@ -139,11 +172,11 @@ export class GuestFormDialog implements OnInit {
     });
   }
 
-  createPerson() {
+  createPerson(person?: any): FormGroup {
     return this.fb.group({
-      fullName: [''],
-      age: [''],
-      gender: ['Male']
+      fullName: [person?.fullName ?? ''],
+      age: [person?.age ?? ''],
+      gender: [person?.gender ?? 'Male']
     });
   }
 

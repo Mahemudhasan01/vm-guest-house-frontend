@@ -13,7 +13,7 @@ export class CheckInCheckOutService {
     return this.http.post<any>(`${environment.USER_ENDPOINT_URL}/checkin`, payload);
   }
 
-  getCurrentGuestByRoomId(roomId: any) {
+  getGuestDtlsByRoomId(roomId: any) {
     return this.http.get<any>(`${environment.USER_ENDPOINT_URL}/checkin/current-guest/${roomId}`);
   }
 }
