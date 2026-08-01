@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { animate, stagger } from "motion";
 import { RoomService } from '../../services/room-service';
+import { CheckInCheckOutService } from '../../services/check-in-check-out-service';
 
 @Pipe({
   name: 'filterByFloor',
@@ -42,9 +43,11 @@ export class Dashboard implements OnInit{
   private dialog = inject(MatDialog);
   rooms: any[] = [];
   floors: any[] = [];
+  searchText:string = '';
 
   constructor(
     private roomService: RoomService,
+    private checkinService: CheckInCheckOutService
   ) {}
 
   ngOnInit(): void {
@@ -79,10 +82,32 @@ export class Dashboard implements OnInit{
     });
   }
 
+  findGuestDetails(){
+    console.log(this.searchText);
+    const params: any = {
+      page: 0,
+      size: 20,
+      // sortBy: 'firstName,asc'
+    };
+
+    params['filterOr'] = 'primaryGuest.mobile|eq|' + this.searchText;
+    params['filterOr'] = params['filterOr'] + '|primaryGuest.firstName|eq|' + this.searchText;
+
+    this.checkinService.getAll(params).subscribe({
+      next: (response: any) => {
+        
+        console.log(response);
+      },
+      error: (error: any) => {
+        console.error('Error fetching rooms:', error);
+      }
+    });
+  }
+
   filteredRooms(): any[] {
-    if (!this.searchQuery?.trim()) {
-      return this.rooms;
-    }
+    // if (!this.searchQuery?.trim()) {
+    //   return this.rooms;
+    // }
 
     const search = this.searchQuery.toLowerCase();
 

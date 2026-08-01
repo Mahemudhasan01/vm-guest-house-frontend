@@ -60,9 +60,10 @@ export class GuestFormDialog implements OnInit {
   propertyId: [1],
 
   roomId: ['', Validators.required],
-
+    id: [''],
     primaryGuest: this.fb.group({
       fullName: ['', Validators.required],
+      id: [''],
       mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       email: ['', Validators.email],
       gender: [''],
@@ -91,6 +92,7 @@ export class GuestFormDialog implements OnInit {
       this.createPerson()
     ])
   });
+  isUpdate: boolean = false;
   
   constructor(
     private checkInCheckOutService: CheckInCheckOutService,
@@ -102,7 +104,10 @@ export class GuestFormDialog implements OnInit {
   ngOnInit(): void {
     this.selectedRoomId = this.selectedRoomDtls.roomId ?? '';
     if (this.selectedRoomDtls.roomStatus === 'OCCUPIED') {
+      this.isUpdate = true;
       this.loadGuestDetails();
+    }else{
+      this.isUpdate = false;
     }
     this.getRoomsList();
   }
@@ -115,12 +120,14 @@ export class GuestFormDialog implements OnInit {
       .getGuestDtlsByRoomId(this.selectedRoomDtls.roomId)
       .subscribe({
         next: (response) => {
+          
           const personsArray = this.guestForm.get('persons') as FormArray;
           // Clear existing persons before adding new ones
           personsArray.clear();
 
           this.guestForm.patchValue({
             primaryGuest: {
+              id: response.data.primaryGuest.id,
               fullName: response.data.primaryGuest.fullName,
               mobile: response.data.primaryGuest.mobile,
               email: response.data.primaryGuest.email,
@@ -135,6 +142,7 @@ export class GuestFormDialog implements OnInit {
               photoUrl: response.data.primaryGuest.photoUrl,
               idProofNo: response.data.primaryGuest.idProofNo
             },
+            id: response.data.id,
             adultCount: response.data.adultCount,
             childCount: response.data.childCount,
             extraPersonCount: response.data.extraPersonCount,
@@ -174,6 +182,7 @@ export class GuestFormDialog implements OnInit {
 
   createPerson(person?: any): FormGroup {
     return this.fb.group({
+      id: [person?.id ?? ''],
       fullName: [person?.fullName ?? ''],
       age: [person?.age ?? ''],
       gender: [person?.gender ?? 'Male']
@@ -223,6 +232,22 @@ export class GuestFormDialog implements OnInit {
 
   onSave() {
     this.checkInCheckOutService.saveCheckingDetails(this.guestForm.value).subscribe({
+      next: (response) => {
+        if(response && !response.isError){
+          console.log('Checking details saved successfully:', response);
+          this.dialogRef.close(this.guestForm.value);
+        } else {
+          console.error('Error saving checking details:', response.errorMessage);
+        }
+      },
+      error: (error) => {
+        console.error('Error saving checking details:', error);
+      }
+    });
+  }
+
+  onUpdate() {
+    this.checkInCheckOutService.updateCheckingDetails(this.guestForm.value).subscribe({
       next: (response) => {
         if(response && !response.isError){
           console.log('Checking details saved successfully:', response);
