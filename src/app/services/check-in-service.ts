@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class CheckInCheckOutService {
+export class CheckInService {
   
   constructor(private http: HttpClient) { }
 

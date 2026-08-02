@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CheckInCheckOutService } from '../../services/check-in-check-out-service';
+import { CheckInService } from '../../services/check-in-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { RoomService } from '../../services/room-service';
@@ -95,7 +95,7 @@ export class GuestFormDialog implements OnInit {
   isUpdate: boolean = false;
   
   constructor(
-    private checkInCheckOutService: CheckInCheckOutService,
+    private checkInService: CheckInService,
     private roomService: RoomService,
     @Inject(MAT_DIALOG_DATA) public selectedRoomDtls: any,
     private dialogRef: MatDialogRef<GuestFormDialog>
@@ -116,7 +116,7 @@ export class GuestFormDialog implements OnInit {
   loadGuestDetails() {
     this.loadingGuest = true;
 
-    this.checkInCheckOutService
+    this.checkInService
       .getGuestDtlsByRoomId(this.selectedRoomDtls.roomId)
       .subscribe({
         next: (response) => {
@@ -231,7 +231,7 @@ export class GuestFormDialog implements OnInit {
   }
 
   onSave() {
-    this.checkInCheckOutService.saveCheckingDetails(this.guestForm.value).subscribe({
+    this.checkInService.saveCheckingDetails(this.guestForm.value).subscribe({
       next: (response) => {
         if(response && !response.isError){
           console.log('Checking details saved successfully:', response);
@@ -247,7 +247,7 @@ export class GuestFormDialog implements OnInit {
   }
 
   onUpdate() {
-    this.checkInCheckOutService.updateCheckingDetails(this.guestForm.value).subscribe({
+    this.checkInService.updateCheckingDetails(this.guestForm.value).subscribe({
       next: (response) => {
         if(response && !response.isError){
           console.log('Checking details saved successfully:', response);

@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { animate, stagger } from "motion";
 import { RoomService } from '../../services/room-service';
-import { CheckInCheckOutService } from '../../services/check-in-check-out-service';
+import { CheckInService } from '../../services/check-in-service';
 
 @Pipe({
   name: 'filterByFloor',
@@ -47,7 +47,7 @@ export class Dashboard implements OnInit{
 
   constructor(
     private roomService: RoomService,
-    private checkinService: CheckInCheckOutService
+    private checkinService: CheckInService
   ) {}
 
   ngOnInit(): void {
