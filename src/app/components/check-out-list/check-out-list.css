@@ -1,0 +1,17 @@
+.chip-btn {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    padding: 2px 12px !important;
+    background-color: #f1f5f9 !important;
+    color: #475569 !important;
+}
+
+.active-chip {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+
+:host {
+      display: block;
+}

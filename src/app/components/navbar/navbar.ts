@@ -22,7 +22,7 @@ export class Navbar {
     { icon: 'how_to_reg', label: 'Registration' },
     { icon: 'room_service', label: 'Service' },
     { icon: 'payments', label: 'Advance' },
-    { icon: 'logout', label: 'Checkout' },
+    { icon: 'logout', label: 'Checkout', route: '/checkout' },
     { icon: 'business', label: 'Corporate' },
     { icon: 'analytics', label: 'Status' },
     { icon: 'receipt_long', label: 'Payment' },
