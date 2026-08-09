@@ -9,6 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CheckInService } from '../../services/check-in-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { RoomService } from '../../services/room-service';
 @Component({
@@ -25,7 +27,12 @@ import { RoomService } from '../../services/room-service';
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
 
   templateUrl: './guest-form-dialog.html',
@@ -55,10 +62,10 @@ export class GuestFormDialog implements OnInit {
     'Passport',
     'PAN Card'
   ];
+  today = new Date();
 
   guestForm = this.fb.group({
   propertyId: [1],
-
   roomId: ['', Validators.required],
     id: [''],
     primaryGuest: this.fb.group({
@@ -82,7 +89,8 @@ export class GuestFormDialog implements OnInit {
     adultCount: [1],
     childCount: [0],
     extraPersonCount: [0],
-
+    checkInDate: [this.today],
+    checkInTime: [this.getCheckInTime()],
     tariff: [0],
     advanceAmount: [0],
 
@@ -93,7 +101,8 @@ export class GuestFormDialog implements OnInit {
     ])
   });
   isUpdate: boolean = false;
-  
+  timeSlots: string[] = [];
+
   constructor(
     private checkInService: CheckInService,
     private roomService: RoomService,
@@ -110,8 +119,21 @@ export class GuestFormDialog implements OnInit {
       this.isUpdate = false;
     }
     this.getRoomsList();
+
+    this.loadCheckInTimeSlots();
   }
 
+  loadCheckInTimeSlots() {
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 15) {
+        this.timeSlots.push(
+          `${hour.toString().padStart(2, '0')}:${minute
+            .toString()
+            .padStart(2, '0')}`
+        );
+      }
+    }
+  }
 
   loadGuestDetails() {
     this.loadingGuest = true;
@@ -266,6 +288,26 @@ export class GuestFormDialog implements OnInit {
     this.guestForm.patchValue({
       roomId: event.value
     });
+  }
+
+  private getCheckInTime(): string {
+    // const now = new Date();
+    // const roundedMinutes = Math.round(now.getMinutes() / 15) * 15;
+
+    // now.setMinutes(roundedMinutes, 0, 0);
+
+    // return now.toLocaleTimeString('en-GB', {
+    //   hour: '2-digit',
+    //   minute: '2-digit',
+    //   hour12: false
+    // });
+    const now = new Date();
+    const roundedMinutes = Math.round(now.getMinutes() / 15) * 15;
+
+    now.setMinutes(roundedMinutes, 0, 0);
+    console.log(`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`);
+    
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
   }
 
   onCancel() {

@@ -5,7 +5,7 @@
       <h2>Guest Registration</h2>
       <p>Room Check-In Form</p>
     </div>
-    <button mat-icon-button (click)="onCancel()">
+    <button mat-icon-button class="!text-white" (click)="onCancel()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -22,24 +22,52 @@
       <div class="section-title">
         Guest Details
       </div>
+    <div class="grid w-full grid-cols-[140px_minmax(0,1fr)_200px] gap-3">
     
-      <mat-form-field appearance="outline">
-        <mat-label>Room No</mat-label>
-        <mat-select formControlName="roomId" (selectionChange)="onRoomSelected($event)" [ngModel]="selectedRoomId">
+      <!-- Room -->
+      <mat-form-field appearance="outline" class="w-full min-w-0">
+        <mat-label>Room No.</mat-label>
     
-          @for (room of roomList; track room) {
+        <mat-select formControlName="roomId" [ngModel]="selectedRoomId">
+          @for (room of roomList; track room.id) {
           <mat-option [value]="room.id">
             {{ room.roomNumber }}
           </mat-option>
           }
-    
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Check-in Time -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Check-in Time</mat-label>
+      
+        <mat-select formControlName="checkInTime">
+          @for (time of timeSlots; track time) {
+          <mat-option [value]="time">
+            {{ time }}
+          </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     
+      <!-- Check-in Date -->
+      <mat-form-field appearance="outline" class="w-full min-w-0">
+        <mat-label>Check-in Date</mat-label>
+    
+        <input matInput [matDatepicker]="checkInPicker" formControlName="checkInDate" [min]="today"
+          placeholder="DD-MM-YYYY" />
+    
+        <mat-datepicker-toggle matIconSuffix [for]="checkInPicker">
+        </mat-datepicker-toggle>
+    
+        <mat-datepicker #checkInPicker [startAt]="today">
+        </mat-datepicker>
+      </mat-form-field>
+    
+    </div>
+
       <div formGroupName="primaryGuest">
-    
         <div class="grid-2">
-    
           <mat-form-field appearance="outline">
             <mat-label>Full Name</mat-label>
             <input matInput formControlName="fullName">
@@ -52,7 +80,7 @@
     
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email">
+            <input matInput value="hello@gmail.com" formControlName="email">
           </mat-form-field>
     
           <mat-form-field appearance="outline">
@@ -61,7 +89,6 @@
             <mat-select formControlName="gender">
               <mat-option value="Male">Male</mat-option>
               <mat-option value="Female">Female</mat-option>
-              <mat-option value="Other">Other</mat-option>
             </mat-select>
           </mat-form-field>
     

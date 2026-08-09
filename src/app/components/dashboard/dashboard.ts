@@ -31,8 +31,7 @@ import { CheckInService } from '../../services/check-in-service';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule,
-    FilterByFloorPipe
+    FormsModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'

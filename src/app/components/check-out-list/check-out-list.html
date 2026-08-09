@@ -57,8 +57,8 @@
                                 <td class="py-4 px-4">
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                                        {{ item.room.roomNumber }} • {{  item.room.roomType.name }}
-                                    </span>
+                                        {{ item.room.roomNumber }} • {{  item.room.roomType.description }}
+                                    </span> 
                                 </td>
                                 <td class="py-4 px-4 whitespace-nowrap text-slate-600">
                                     05 Aug 2026, 02:30 PM
@@ -98,12 +98,12 @@
                     class="bg-white border border-slate-200 rounded-lg p-4 space-y-3 cursor-pointer hover:border-blue-400 transition-all shadow-sm">
                     <div class="flex items-start justify-between">
                         <div>
-                            <h3 class="font-bold text-slate-800 text-sm">{{ selectedGuest.primaryGuest.fullName }}</h3>
-                            <p class="text-xs text-slate-500"> {{ selectedGuest.primaryGuest.mobile }} • {{ selectedGuest.primaryGuest.city }}</p>
+                            <h3 class="font-bold text-slate-800 text-sm">{{ selectedGuest?.primaryGuest?.fullName }}</h3>
+                            <p class="text-xs text-slate-500"> {{ selectedGuest?.primaryGuest?.mobile }} • {{ selectedGuest?.primaryGuest?.city }}</p>
                         </div>
                         <span
                             class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                            {{ selectedGuest.room.roomNumber }} • {{ selectedGuest.room.roomType.name }}
+                            {{ selectedGuest?.room?.roomNumber }} • {{ selectedGuest?.room?.roomType?.description }}
                         </span>
                     </div>
 
@@ -153,11 +153,11 @@
                 <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between sticky top-0 z-10">
                     <div class="flex items-center gap-3">
                         <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded">
-                            {{ selectedGuest.room.roomNumber }} • {{ selectedGuest.room.roomType.name }}
+                            {{ selectedGuest?.room?.roomNumber }} • {{ selectedGuest?.room?.roomType?.description }}
                         </span>
                         <div>
                             <h2 class="text-base font-bold text-white leading-tight">Guest Checkout Details</h2>
-                            <p class="text-xs text-slate-300">{{ selectedGuest.primaryGuest.fullName }} • {{ selectedGuest.room.roomType.name }}</p>
+                            <p class="text-xs text-slate-300">{{ selectedGuest?.primaryGuest?.fullName }} • {{ selectedGuest?.room?.roomType?.description }}</p>
                         </div>
                     </div>
                     <button type="button" (click)="closeCheckoutDetails()"
@@ -191,19 +191,19 @@
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4">
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Full Name</span>
-                                <span class="font-bold text-slate-800 text-sm">Rahul Sharma</span>
+                                <span class="font-bold text-slate-800 text-sm">{{ selectedGuest?.primaryGuest?.fullName }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Mobile</span>
-                                <span class="font-medium text-slate-800">9876543210</span>
+                                <span class="font-medium text-slate-800">{{ selectedGuest?.primaryGuest?.mobile }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Email</span>
-                                <span class="font-medium text-slate-800">rahul&#64;example.com</span>
+                                <span class="font-medium text-slate-800"> {{ selectedGuest?.primaryGuest?.email }} </span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">City</span>
-                                <span class="font-medium text-slate-800">Surat</span>
+                                <span class="font-medium text-slate-800">{{ selectedGuest?.primaryGuest?.city }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">ID Proof</span>
@@ -212,7 +212,7 @@
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">ID Proof
                                     Number</span>
-                                <span class="font-medium text-slate-800">XXXX-XXXX-1234</span>
+                                <span class="font-medium text-slate-800">{{ selectedGuest?.primaryGuest?.idProofNo }}</span>
                             </div>
                         </div>
                     </div>
@@ -227,32 +227,31 @@
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Room
                                     Number</span>
-                                <span class="font-bold text-slate-800">101</span>
+                                <span class="font-bold text-slate-800">{{ selectedGuest?.room?.roomNumber }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Room Type</span>
-                                <span class="font-medium text-slate-800">Deluxe Room</span>
+                                <span class="font-medium text-slate-800">{{ selectedGuest?.room?.roomType?.name }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Total Stay</span>
                                 <span
                                     class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 inline-block">2
-                                    Nights</span>
+                                    Days</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Check-in
                                     Date</span>
-                                <span class="font-medium text-slate-800">05 Aug 2026</span>
+                                <span class="font-medium text-slate-800">{{ selectedGuest?.checkInDateTime }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Check-in
                                     Time</span>
-                                <span class="font-medium text-slate-800">02:30 PM</span>
+                                <span class="font-medium text-slate-800"> {{ selectedGuest?.checkInDateTime }} </span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[10px] uppercase font-semibold">Expected
-                                    Checkout</span>
-                                <span class="font-medium text-slate-800">07 Aug 2026</span>
+                                <span class="text-slate-400 block text-[10px] uppercase font-semibold">Extra Persons</span>
+                                <span class="font-medium text-slate-800"> {{ selectedGuest?.persons?.length || 0 }} </span>
                             </div>
                         </div>
                     </div>
