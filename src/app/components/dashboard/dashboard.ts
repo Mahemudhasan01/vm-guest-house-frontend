@@ -171,8 +171,7 @@ export class Dashboard implements OnInit{
       autoFocus: false,
       panelClass: 'custom-dialog-container',
       data: {
-        roomId: room.id,
-        roomStatus: room.status
+        room: room,
       }
     }); 
 

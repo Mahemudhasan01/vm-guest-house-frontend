@@ -22,49 +22,49 @@
       <div class="section-title">
         Guest Details
       </div>
-    <div class="grid w-full grid-cols-[140px_minmax(0,1fr)_200px] gap-3">
-    
-      <!-- Room -->
-      <mat-form-field appearance="outline" class="w-full min-w-0">
-        <mat-label>Room No.</mat-label>
-    
-        <mat-select formControlName="roomId" [ngModel]="selectedRoomId">
-          @for (room of roomList; track room.id) {
-          <mat-option [value]="room.id">
-            {{ room.roomNumber }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <div class="grid w-full grid-cols-[140px_minmax(0,1fr)_200px] gap-3">
 
-      <!-- Check-in Time -->
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Check-in Time</mat-label>
-      
-        <mat-select formControlName="checkInTime">
-          @for (time of timeSlots; track time) {
-          <mat-option [value]="time">
-            {{ time }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    
-      <!-- Check-in Date -->
-      <mat-form-field appearance="outline" class="w-full min-w-0">
-        <mat-label>Check-in Date</mat-label>
-    
-        <input matInput [matDatepicker]="checkInPicker" formControlName="checkInDate" [min]="today"
-          placeholder="DD-MM-YYYY" />
-    
-        <mat-datepicker-toggle matIconSuffix [for]="checkInPicker">
-        </mat-datepicker-toggle>
-    
-        <mat-datepicker #checkInPicker [startAt]="today">
-        </mat-datepicker>
-      </mat-form-field>
-    
-    </div>
+        <!-- Room -->
+        <mat-form-field appearance="outline" class="w-full min-w-0">
+          <mat-label>Room No.</mat-label>
+
+          <mat-select formControlName="roomId" [ngModel]="selectedRoomId">
+            @for (room of roomList; track room.id) {
+            <mat-option [value]="room.id">
+              {{ room.roomNumber }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Check-in Time -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Check-in Time</mat-label>
+
+          <mat-select formControlName="checkInTime">
+            @for (time of timeSlots; track time) {
+            <mat-option [value]="time">
+              {{ time }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Check-in Date -->
+        <mat-form-field appearance="outline" class="w-full min-w-0">
+          <mat-label>Check-in Date</mat-label>
+
+          <input matInput [matDatepicker]="checkInPicker" formControlName="checkInDate" [min]="today"
+            placeholder="DD-MM-YYYY" />
+
+          <mat-datepicker-toggle matIconSuffix [for]="checkInPicker">
+          </mat-datepicker-toggle>
+
+          <mat-datepicker #checkInPicker [startAt]="today">
+          </mat-datepicker>
+        </mat-form-field>
+
+      </div>
 
       <div formGroupName="primaryGuest">
         <div class="grid-2">
@@ -72,31 +72,31 @@
             <mat-label>Full Name</mat-label>
             <input matInput formControlName="fullName">
           </mat-form-field>
-    
+
           <mat-form-field appearance="outline">
             <mat-label>Mobile</mat-label>
             <input matInput formControlName="mobile">
           </mat-form-field>
-    
+
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
             <input matInput value="hello@gmail.com" formControlName="email">
           </mat-form-field>
-    
+
           <mat-form-field appearance="outline">
             <mat-label>Gender</mat-label>
-    
+
             <mat-select formControlName="gender">
               <mat-option value="Male">Male</mat-option>
               <mat-option value="Female">Female</mat-option>
             </mat-select>
           </mat-form-field>
-    
+
           <mat-form-field appearance="outline">
             <mat-label>City</mat-label>
             <input matInput formControlName="city">
           </mat-form-field>
-    
+
           <mat-form-field appearance="outline">
             <mat-label>State</mat-label>
             <mat-select formControlName="state">
@@ -108,39 +108,44 @@
             </mat-select>
           </mat-form-field>
         </div>
-    
+
         <mat-form-field appearance="outline">
           <mat-label>Address</mat-label>
           <textarea matInput rows="3" formControlName="address">
-                </textarea>
+                        </textarea>
         </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>GST No</mat-label>
+          <input matInput formControlName="gstNo">
+        </mat-form-field>
+
         <div class="grid-2">
           <!-- Remove this if your backend doesn't have idProofType -->
-          <!--
-                        <mat-form-field appearance="outline">
-                          <mat-label>ID Proof Type</mat-label>
-                  
-                          <mat-select>
-                            @for (type of idProofTypes; track type) {
-                              <mat-option [value]="type">
-                                {{ type }}
-                              </mat-option>
-                            }
-                          </mat-select>
-                        </mat-form-field>
-                        -->
-    
+          <mat-form-field appearance="outline">
+            <mat-label>ID Proof Type</mat-label>
+
+            <mat-select formControlName="idProofType">
+              @for (type of idProofTypes; track type) {
+              <mat-option [value]="type">
+                {{ type }}
+              </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
           <mat-form-field appearance="outline">
             <mat-label>ID Proof No</mat-label>
             <input matInput formControlName="idProofNo">
           </mat-form-field>
-    
-          <mat-form-field appearance="outline">
-            <mat-label>GST No</mat-label>
-            <input matInput formControlName="gstNo">
-          </mat-form-field>
+
         </div>
       </div>
+      <!-- REMARKS -->
+      <mat-form-field appearance="outline">
+        <mat-label>Remarks</mat-label>
+        <textarea matInput rows="3" formControlName="remarks"></textarea>
+      </mat-form-field>
     </div>
 
     <!-- RIGHT SIDE -->
@@ -197,14 +202,15 @@
       </div>
 
       <!-- IMAGE UPLOADS -->
-      <div class="upload-section">
+      <div class="upload-section" formGroupName="primaryGuest">
         <div class="upload-box" (dblclick)="openPreview(guestPhoto)">
           <input type="file" hidden #guestInput (change)="onFileSelect($event, 'guest')">
           <button mat-button type="button" (click)="guestInput.click()">
             Upload Guest Photo
           </button>
           @if (guestPhoto) {
-          <img [src]="guestPhoto" class="preview-thumb"> }
+            <img [src]="guestPhoto" class="preview-thumb">
+          }
         </div>
         <div class="upload-box" (dblclick)="openPreview(idProofPhoto)">
           <input type="file" hidden #proofInput (change)="onFileSelect($event, 'proof')">
@@ -212,15 +218,53 @@
             Upload ID Proof
           </button>
           @if (idProofPhoto) {
-          <img [src]="idProofPhoto" class="preview-thumb"> }
+            <img [src]="idProofPhoto" class="preview-thumb">
+          }
         </div>
       </div>
+      <!-- 4. Payment Summary -->
+      <div class="bg-slate-900 text-slate-100 p-5 rounded-lg space-y-3 shadow-inner">
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+          <mat-icon class="!text-base !w-4 !h-4 text-blue-400">receipt_long</mat-icon>
+          <h3 class="font-bold text-base uppercase tracking-wider text-slate-200">Payment Summary</h3>
+        </div>
 
-      <!-- REMARKS -->
-      <mat-form-field appearance="outline">
-        <mat-label>Remarks</mat-label>
-        <textarea matInput rows="3" formControlName="remarks"></textarea>
-      </mat-form-field>
+        <div class="space-y-2 text-base">
+          <div class="flex justify-between text-slate-300">
+            <span>Room Charges</span>
+            <span class="font-medium text-white">₹{{ selectedRoomDtls.room.roomType.baseTariff }}</span>
+          </div>
+          @if (persons.length > 1) {
+            <div class="flex justify-between text-slate-300">
+              <span>Extran Person Charges</span>
+              <span class="font-medium text-white">₹{{ selectedRoomDtls.room.roomType.extraPersonCharge }}</span>
+            </div>
+          }
+          <!-- <div class="flex justify-between text-emerald-400">
+            <span>Discount</span>
+            <span class="font-medium">- ₹0.00</span>
+          </div> -->
+          <div class="flex justify-between text-slate-300">
+            <span>Tax (GST)</span>
+            <span class="font-medium text-white">₹{{ gstAmount }}</span> 
+          </div>
+
+          <div class="border-t border-slate-800 pt-2 my-1 flex justify-between font-bold text-lg text-white">
+            <span>Grand Total</span>
+            <span class="text-blue-400">₹{{ totalTariff }}</span>
+          </div>
+
+          <div class="flex justify-between text-slate-300 pt-1">
+            <span>Advance Paid</span>
+            <span class="font-medium text-emerald-400">₹2,000</span>
+          </div>
+
+          <div class="flex justify-between text-sm font-black text-amber-400 pt-1 border-t border-slate-800/80">
+            <span>Balance Due</span>
+            <span>₹2,400</span>
+          </div>
+        </div>
+      </div>
     </div>
   </form>
 
@@ -230,13 +274,13 @@
       Cancel
     </button>
     @if (isUpdate) {
-      <button mat-raised-button color="primary" type="button" (click)="onUpdate()">
-        Update Guest
-      </button>
+    <button mat-raised-button color="primary" type="button" (click)="onUpdate()">
+      Update Guest
+    </button>
     }@else{
-      <button mat-raised-button color="primary" type="button" (click)="onSave()">
-        Save Guest
-      </button>
+    <button mat-raised-button color="primary" type="button" (click)="onSave()">
+      Save Guest
+    </button>
     }
   </div>
 </div>

@@ -57,12 +57,16 @@ export class GuestFormDialog implements OnInit {
   ];
 
   idProofTypes = [
-    'Aadhaar',
-    'Driving License',
-    'Passport',
-    'PAN Card'
+    'AADHAAR',
+    'DRIVING_LICENSE',
+    'PAN',
+    'VOTER_ID',
+    'PASSPORT',
+    'OTHER'
   ];
   today = new Date();
+  totalTariff: number = 0;
+  gstAmount: number = 0;
 
   guestForm = this.fb.group({
   propertyId: [1],
@@ -83,7 +87,9 @@ export class GuestFormDialog implements OnInit {
       gstNo: [''],
       companyName: [''],
       photoUrl: [''],
-      idProofNo: ['', Validators.required]
+      idProofUrl: [''],
+      idProofNo: ['', Validators.required],
+      idProofType: [''],
     }),
 
     adultCount: [1],
@@ -111,8 +117,8 @@ export class GuestFormDialog implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.selectedRoomId = this.selectedRoomDtls.roomId ?? '';
-    if (this.selectedRoomDtls.roomStatus === 'OCCUPIED') {
+    this.selectedRoomId = this.selectedRoomDtls.room.id ?? '';
+    if (this.selectedRoomDtls.room.status === 'OCCUPIED') {
       this.isUpdate = true;
       this.loadGuestDetails();
     }else{
@@ -121,6 +127,8 @@ export class GuestFormDialog implements OnInit {
     this.getRoomsList();
 
     this.loadCheckInTimeSlots();
+
+    this.calculateTariff();
   }
 
   loadCheckInTimeSlots() {
@@ -162,13 +170,14 @@ export class GuestFormDialog implements OnInit {
               gstNo: response.data.primaryGuest.gstNo,
               companyName: response.data.primaryGuest.companyName,
               photoUrl: response.data.primaryGuest.photoUrl,
-              idProofNo: response.data.primaryGuest.idProofNo
+              idProofNo: response.data.primaryGuest.idProofNo,
+              idProofType: response.data.primaryGuest.idProofType
             },
             id: response.data.id,
             adultCount: response.data.adultCount,
             childCount: response.data.childCount,
-            extraPersonCount: response.data.extraPersonCount,
-            tariff: response.data.tariff,
+            extraPersonCount: response.data.room.roomType.extraPersonCharge,
+            tariff: response.data.room.roomType.baseTariff,
             advanceAmount: response.data.advanceAmount,
             remarks: response.data.remarks
           });
@@ -217,12 +226,14 @@ export class GuestFormDialog implements OnInit {
 
   addPerson() {
     this.persons.push(this.createPerson());
+    this.calculateTariff();
   }
 
   removePerson(index: number) {
     if (this.persons.length > 1) {
       this.persons.removeAt(index);
     }
+    this.calculateTariff();
   }
 
   onFileSelect(event: any, type: 'guest' | 'proof') {
@@ -235,8 +246,10 @@ export class GuestFormDialog implements OnInit {
 
       if (type === 'guest') {
         this.guestPhoto = reader.result as string;
+        this.guestForm.get('primaryGuest.photoUrl')?.setValue(this.guestPhoto);
       } else {
         this.idProofPhoto = reader.result as string;
+        this.guestForm.get('primaryGuest.idProofUrl')?.setValue(this.idProofPhoto);
       }
     };
 
@@ -250,6 +263,17 @@ export class GuestFormDialog implements OnInit {
 
   closePreview() {
     this.previewImage = null;
+  }
+
+  calculateTariff() {
+    const baseTariff = this.selectedRoomDtls.room.roomType.baseTariff || 0;
+    const extraPersonCharge = this.selectedRoomDtls.room.roomType.extraPersonCharge || 0;
+
+    this.totalTariff = baseTariff + (this.persons.length > 1 ? (this.persons.length - 1) * extraPersonCharge : 0);
+    this.gstAmount = this.totalTariff * this.selectedRoomDtls.room.roomType.gstRate / 100; // Assuming GST is 5%
+    this.totalTariff += this.gstAmount; // Add GST to total tariff
+
+    this.guestForm.get('tariff')?.setValue(this.totalTariff);
   }
 
   onSave() {
