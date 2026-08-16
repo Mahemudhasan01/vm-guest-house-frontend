@@ -1,5 +1,5 @@
 <nav
-    class="bg-[var(--color-high-primary)] text-white h-16 flex items-center px-5 gap-6 shadow-md border-b-4 border-[var(--color-high-accent)] sticky top-0 z-50">
+    class="bg-[var(--color-high-primary)] text-white h-16 flex items-center px-5 gap-6 shadow-md border-b-4 border-[var(--color-high-accent)] sticky top-0 z-50 antialiased">
     <div class="flex items-center gap-2">
         <div class="bg-[var(--color-high-accent)] p-1.5 rounded-lg flex items-center justify-center">
             <mat-icon class="!text-white !text-lg">hotel</mat-icon>
@@ -10,16 +10,18 @@
                 Pro
             </span>
         </span>
-    </div>
+    </div> 
     <div class="hidden xl:flex items-center gap-1 h-full">
         @for (item of menuItems; track item.label) {
+        <!-- Added !text-white and direct custom property normalization to counter Material rules -->
         <button mat-button
-            class="!rounded-none h-full !px-4 hover:!bg-white/10 flex flex-col items-center justify-center gap-0.5 group"
-            [matTooltip]="item.label">
+            class="!rounded-none h-full !px-4 hover:!bg-white/10 flex flex-col items-center justify-center gap-0.5 group !text-white"
+            style="--mat-sys-primary: #ffffff; height: 100%; display: flex;"
+            [matTooltip]="item.label" (click)="navigateTo(item.route)">
             <mat-icon class="!text-lg opacity-70 group-hover:opacity-100 transition-opacity">
                 {{item.icon}}
             </mat-icon>
-            <span class="text-[9px] uppercase font-bold tracking-wider opacity-60 group-hover:opacity-100">
+            <span class="text-[10px] uppercase font-bold tracking-wider opacity-60 group-hover:opacity-100 block leading-tight">
                 {{item.label}}
             </span>
         </button>
@@ -34,7 +36,7 @@
                 Reception Admin
             </p>
         </div>
-        <button mat-icon-button class="!bg-white/5 hover:!bg-white/10 !w-10 !h-10">
+        <button mat-icon-button class="!bg-white/5 hover:!bg-white/10 !w-10 !h-10 !text-white">
             <mat-icon class="opacity-80">
                 account_circle
             </mat-icon>

@@ -1,16 +1,16 @@
 <div class="min-h-screen bg-slate-50/50 p-4 sm:p-6 md:p-8">
-    <div class="max-w-6xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6">
 
         <!-- Page Header -->
         <div
-            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
             <div>
                 <h1 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                     <mat-icon class="text-slate-600">logout</mat-icon>
                     Guest Checkout
                 </h1>
-                <p class="text-base text-slate-500 mt-1">Review guest stay, additional services, and payment summary to
-                    complete checkouts.</p>
+                <!-- <p class="text-base text-slate-500 mt-1">Review guest stay, additional services, and payment summary to
+                    complete checkouts.</p> -->
             </div>
             <div class="flex items-center gap-2">
                 <span
@@ -23,19 +23,19 @@
 
         <!-- Currently Checked-in Guests Summary Section -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <!-- <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div>
                     <h2 class="text-sm font-semibold text-slate-800">Currently Checked-in Guests</h2>
                     <p class="text-base text-slate-500">Select a guest below to view room details, service charges, and
                         complete checkout.</p>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Desktop Table View -->
             <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left text-base text-slate-600">
                     <thead
-                        class="bg-slate-100/70 text-slate-500 font-semibold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                        class="bg-slate-100/70 text-slate-500 font-semibold uppercase text-[13px] tracking-wider border-b border-slate-200">
                         <tr>
                             <th class="py-3 px-5">Guest Name</th>
                             <th class="py-3 px-4">Room</th>
@@ -48,7 +48,7 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100 font-medium">
                         @for (item of checkOutList; track item.name) {
-                            <tr (click)="openCheckoutDetails()" (keyup.enter)="openCheckoutDetails()" tabindex="0" role="button"
+                            <tr (click)="openCheckoutDetails(item.id)" (keyup.enter)="openCheckoutDetails()" tabindex="0" role="button"
                                 class="hover:bg-slate-50 transition-colors cursor-pointer group">
                                 <td class="py-4 px-5">
                                     <div class="font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{{ item.primaryGuest.fullName }}</div>
@@ -61,11 +61,10 @@
                                     </span> 
                                 </td>
                                 <td class="py-4 px-4 whitespace-nowrap text-slate-600">
-                                    05 Aug 2026, 02:30 PM
-                                    {{ item.checkInDate | date: 'dd MM yyyy, hh:mm a' }}
+                                    {{ item.checkInDate | date: 'dd-MM-yyyy' }} : {{ item.checkInTime }}
                                 </td>
                                 <td class="py-4 px-4 font-semibold text-slate-700">
-                                    2 Days
+                                    {{ item.stayCount }} Days 
                                 </td>
                                 <td class="py-4 px-4 font-bold text-slate-900">
                                     {{ item.room.roomType.baseTariff | currency: 'INR':'symbol':'1.0-0' }}
@@ -236,22 +235,21 @@
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Total Stay</span>
                                 <span
-                                    class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 inline-block">2
-                                    Days</span>
+                                    class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 inline-block">{{ selectedGuest?.stayCount }} Days</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Check-in
                                     Date</span>
-                                <span class="font-medium text-slate-800">{{ selectedGuest?.checkInDateTime }}</span>
+                                <span class="font-medium text-slate-800">{{ selectedGuest?.checkInDate | date: 'dd-MM-yyyy' }}</span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Check-in
                                     Time</span>
-                                <span class="font-medium text-slate-800"> {{ selectedGuest?.checkInDateTime }} </span>
+                                <span class="font-medium text-slate-800"> {{ selectedGuest?.checkInTime }} </span>
                             </div>
                             <div>
                                 <span class="text-slate-400 block text-[10px] uppercase font-semibold">Extra Persons</span>
-                                <span class="font-medium text-slate-800"> {{ selectedGuest?.persons?.length || 0 }} </span>
+                                <span class="font-medium text-slate-800"> {{ selectedGuest?.persons?.length > 1 || 0 }} </span>
                             </div>
                         </div>
                     </div>
@@ -306,37 +304,37 @@
 
                         <div class="space-y-2 text-base">
                             <div class="flex justify-between text-slate-300">
-                                <span>Room Charges (2 Nights)</span>
-                                <span class="font-medium text-white">₹3,000</span>
+                                <span>Room Charges ({{ selectedGuest?.stayCount }} Days)</span>
+                                <span class="font-medium text-white">₹{{ selectedGuest?.room?.roomType?.baseTariff * selectedGuest?.stayCount || 0 }} </span>
                             </div>
                             <div class="flex justify-between text-slate-300">
                                 <span>Services Total</span>
-                                <span class="font-medium text-white">₹1,100</span>
+                                <span class="font-medium text-white">₹00</span>
                             </div>
-                            <div class="flex justify-between text-emerald-400">
+                            <!-- <div class="flex justify-between text-emerald-400">
                                 <span>Discount</span>
                                 <span class="font-medium">- ₹100</span>
-                            </div>
+                            </div> -->
                             <div class="flex justify-between text-slate-300">
                                 <span>Tax (GST)</span>
-                                <span class="font-medium text-white">₹400</span>
+                                <span class="font-medium text-white"> ₹{{ (selectedGuest?.room?.roomType?.baseTariff * selectedGuest?.stayCount || 0) * selectedGuest?.room?.roomType?.gstRate / 100 | number:'1.2-2' }} </span>
                             </div>
 
                             <div
                                 class="border-t border-slate-800 pt-2 my-1 flex justify-between font-bold text-sm text-white">
                                 <span>Grand Total</span>
-                                <span class="text-blue-400">₹4,400</span>
+                                <span class="text-blue-400">₹{{ (selectedGuest?.room?.roomType?.baseTariff * selectedGuest?.stayCount || 0) + (selectedGuest?.room?.roomType?.baseTariff * selectedGuest?.stayCount || 0) * selectedGuest?.room?.roomType?.gstRate / 100 | number:'1.2-2' }}</span>
                             </div>
 
                             <div class="flex justify-between text-slate-300 pt-1">
                                 <span>Advance Paid</span>
-                                <span class="font-medium text-emerald-400">₹2,000</span>
+                                <span class="font-medium text-emerald-400">₹0</span>
                             </div>
 
                             <div
                                 class="flex justify-between text-sm font-black text-amber-400 pt-1 border-t border-slate-800/80">
                                 <span>Balance Due</span>
-                                <span>₹2,400</span>
+                                <span>₹00</span>
                             </div>
                         </div>
                     </div>

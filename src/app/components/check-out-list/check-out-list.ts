@@ -1,13 +1,13 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CheckOutService } from '../../services/check-out-service';
 import { CheckInService } from '../../services/check-in-service';
+import { CheckOutService } from '../../services/check-out-service';
 // import { SaasDocsDialog } from './saas-docs-dialog';
 
 @Component({
@@ -47,14 +47,30 @@ export class CheckOutList implements OnInit{
 
     this.checkInService.getAll(params).subscribe({
       next: (response: any) => {
-        this.checkOutList = response.data.data;
+        this.checkOutList = response.data.data.map((item: any) => ({
+          ...item,
+          stayCount: this.calculateStayDays(item.checkInDate, item.checkInTime)
+        }));
         this.numberOfCheckout = this.checkOutList.length;
-        console.log(response);
       },
       error: (error: any) => {
         console.error('Error fetching rooms:', error);
       }
     });
+  }
+
+  calculateStayDays(checkInDate: any, checkInTime: any) {
+    const checkInDateTime = new Date(`${checkInDate}T${checkInTime}`);
+    const currentDateTime = new Date();
+
+    const timeDifference =
+      currentDateTime.getTime() - checkInDateTime.getTime();
+
+    const stayCount = Math.floor(
+      timeDifference / (1000 * 60 * 60 * 24)
+    );
+
+    return Math.max(1, stayCount);
   }
 
   showDetails = signal(false);

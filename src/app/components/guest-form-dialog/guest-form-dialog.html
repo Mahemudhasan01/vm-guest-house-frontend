@@ -54,7 +54,7 @@
         <mat-form-field appearance="outline" class="w-full min-w-0">
           <mat-label>Check-in Date</mat-label>
 
-          <input matInput [matDatepicker]="checkInPicker" formControlName="checkInDate" [min]="today"
+          <input matInput [matDatepicker]="checkInPicker" formControlName="checkInDate" [max]="today"
             placeholder="DD-MM-YYYY" />
 
           <mat-datepicker-toggle matIconSuffix [for]="checkInPicker">

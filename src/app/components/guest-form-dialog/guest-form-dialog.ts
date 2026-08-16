@@ -13,6 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { RoomService } from '../../services/room-service';
+import { CommonService } from '../../services/common-service';
 @Component({
   selector: 'app-guest-form-dialog',
 
@@ -95,7 +96,7 @@ export class GuestFormDialog implements OnInit {
     adultCount: [1],
     childCount: [0],
     extraPersonCount: [0],
-    checkInDate: [this.today],
+    checkInDate: [this.convertDateToDataBaseFormat(this.today)],
     checkInTime: [this.getCheckInTime()],
     tariff: [0],
     advanceAmount: [0],
@@ -113,7 +114,8 @@ export class GuestFormDialog implements OnInit {
     private checkInService: CheckInService,
     private roomService: RoomService,
     @Inject(MAT_DIALOG_DATA) public selectedRoomDtls: any,
-    private dialogRef: MatDialogRef<GuestFormDialog>
+    private dialogRef: MatDialogRef<GuestFormDialog>,
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
@@ -147,7 +149,7 @@ export class GuestFormDialog implements OnInit {
     this.loadingGuest = true;
 
     this.checkInService
-      .getGuestDtlsByRoomId(this.selectedRoomDtls.roomId)
+      .getGuestDtlsByRoomId(this.selectedRoomDtls.room.id)
       .subscribe({
         next: (response) => {
           
@@ -246,10 +248,10 @@ export class GuestFormDialog implements OnInit {
 
       if (type === 'guest') {
         this.guestPhoto = reader.result as string;
-        this.guestForm.get('primaryGuest.photoUrl')?.setValue(this.guestPhoto);
+        this.guestForm.get('primaryGuest.photoUrl')?.setValue(file.name);
       } else {
         this.idProofPhoto = reader.result as string;
-        this.guestForm.get('primaryGuest.idProofUrl')?.setValue(this.idProofPhoto);
+        this.guestForm.get('primaryGuest.idProofUrl')?.setValue(file.name);
       }
     };
 
@@ -336,5 +338,21 @@ export class GuestFormDialog implements OnInit {
 
   onCancel() {
     this.dialogRef.close();
+  }
+
+  convertDateToDataBaseFormat(date: any) {
+    // YYYY-MM-DD
+    if (date) {
+      let day = date.getDate().toString();
+      if (day.length != 2) {
+        day = '0' + day;
+      }
+      let month = (date.getMonth() + 1).toString();
+      if (month.length != 2) {
+        month = '0' + month;
+      }
+      return `${date.getFullYear()}-${month}-${day}`;
+    }
+    return '';
   }
 }
