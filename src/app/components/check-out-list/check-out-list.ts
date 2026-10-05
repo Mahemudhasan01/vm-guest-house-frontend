@@ -42,7 +42,8 @@ export class CheckOutList implements OnInit{
     const params: any = {
       page: 0,
       size: 20,
-      sortBy: 'createdDateTime,ASC'
+      sortBy: 'createdDateTime,ASC',
+      filterAnd: 'stayStatus|eq|CHECKED_IN'
     };
 
     this.checkInService.getAll(params).subscribe({
@@ -89,6 +90,25 @@ export class CheckOutList implements OnInit{
   }
 
   confirmCheckout() {
+    const payload = {
+      id: this.selectedGuest.id,
+      checkOutDate: new Date().toISOString().split('T')[0],
+      checkOutTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+    this.checkOutService.proceedCheckOut(payload).subscribe({
+      next: (response: any) => {
+        this.snackBar.open('Checkout successful!', 'Close', {
+          duration: 3000,
+        });
+        this.loadCheckOutList();
+      },
+      error: (error: any) => {
+        console.error('Error during checkout:', error);
+        this.snackBar.open('Checkout failed. Please try again.', 'Close', {
+          duration: 3000,
+        });
+      }
+    });
     this.isCheckoutConfirmed.set(true);
   }
 }

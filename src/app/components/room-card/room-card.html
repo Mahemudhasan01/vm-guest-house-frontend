@@ -2,6 +2,7 @@
 flex-col items-center justify-center shadow-sm overflow-hidden"
   [class.bg-[var(--color-high-occupied)]]="room().status === 'OCCUPIED'"
   [class.border-green-600]]="room().status === 'OCCUPIED'"
+  [class.bg-warning]="room().status === 'CLEANING'"
   [class.bg-white]="room().status === 'VACANT'"
   [class.bg-warning]="room().status === 'MAINTENANCE'"
   [class.border-[var(--color-high-border)]]="room().status === 'VACANT'"
